@@ -1,0 +1,51 @@
+@import "tailwindcss";
+
+:root {
+  /* Design Tokens from Prompt */
+  --color-primary: #965c2a;
+  --color-primary-dark: #7a4a22;
+  --color-warm-beige: #fdfaf6;
+  --color-warm-cream: #f9f4ee;
+  --color-slate-900: #1a1c21;
+  --color-slate-800: #2d3139;
+  --color-slate-600: #5c626e;
+  --color-gold-muted: #c5a47e;
+
+  --background: var(--color-warm-beige);
+  --foreground: var(--color-slate-900);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  
+  --color-primary: var(--color-primary);
+  --color-primary-dark: var(--color-primary-dark);
+  --color-warm-beige: var(--color-warm-beige);
+  --color-warm-cream: var(--color-warm-cream);
+  --color-slate-900: var(--color-slate-900);
+  --color-slate-800: var(--color-slate-800);
+  --color-slate-600: var(--color-slate-600);
+  --color-gold-muted: var(--color-gold-muted);
+
+  --font-display: var(--font-noto-serif-hebrew); 
+  --font-body: var(--font-assistant);
+
+  --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+}
+
+/* Base styles */
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+}
+
+/* Custom Utilities */
+@utility text-shadow-sm {
+  text-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}

@@ -4,7 +4,12 @@ import Image from 'next/image';
 import { lawyers } from '@/lib/data';
 import { useLanguage } from '@/context/LanguageContext';
 
-export default function TeamDirectory() {
+interface TeamDirectoryProps {
+    initialPracticeId?: string;
+    hidePracticeFilter?: boolean;
+}
+
+export default function TeamDirectory({ initialPracticeId, hidePracticeFilter }: TeamDirectoryProps = {}) {
     const { lang } = useLanguage();
     // Featured Founder
     const featuredLawyer = lawyers[0];

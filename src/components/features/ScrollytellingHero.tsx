@@ -2,10 +2,9 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { useScroll, useTransform, motion } from 'framer-motion';
-
 import { useLanguage } from '@/context/LanguageContext';
 
-const FRAME_COUNT = 191; // 0 to 191
+const FRAME_COUNT = 200; // 1 to 200
 
 export default function ScrollytellingHero() {
     const { lang } = useLanguage();
@@ -20,28 +19,28 @@ export default function ScrollytellingHero() {
         offset: ["start start", "end end"]
     });
 
-    // Map scroll progress (0..1) to frame index (0..191)
-    const frameIndex = useTransform(scrollYProgress, [0, 1], [0, FRAME_COUNT]);
+    // Map scroll progress (0..1) to frame index (1..200)
+    const frameIndex = useTransform(scrollYProgress, [0, 1], [1, FRAME_COUNT]);
 
     // Preload images
     useEffect(() => {
         let loadedCount = 0;
         const loadedImages: HTMLImageElement[] = [];
 
-        for (let i = 0; i <= FRAME_COUNT; i++) {
-            // Construct filename: frame_000.jpg, frame_012.jpg, etc.
+        // Frames are 1-based in Hero-A
+        for (let i = 1; i <= FRAME_COUNT; i++) {
+            // Construct filename: ezgif-frame-001.jpg, ezgif-frame-012.jpg, etc.
             const fileIndex = i.toString().padStart(3, '0');
             const img = new Image();
-            img.src = `/Hero/frame_${fileIndex}.jpg`;
+            img.src = `/Hero-A/ezgif-frame-${fileIndex}.jpg`;
             img.onload = () => {
                 loadedCount++;
                 if (loadedCount > FRAME_COUNT * 0.5) {
-                    // Consider "loaded enough" to start showing content after 50%? 
-                    // Or wait for all. Let's wait for all to avoid flicker initially or check active logic.
-                    if (loadedCount === FRAME_COUNT + 1) setIsLoaded(true);
+                    if (loadedCount === FRAME_COUNT) setIsLoaded(true);
                 }
             };
-            loadedImages[i] = img;
+            // Store at index i-1 (0-based array)
+            loadedImages[i - 1] = img;
         }
         setImages(loadedImages);
     }, []);
@@ -83,8 +82,11 @@ export default function ScrollytellingHero() {
         };
 
         const render = () => {
-            const index = Math.min(Math.floor(frameIndex.get()), FRAME_COUNT);
-            const img = images[index];
+            // frameIndex returns 1..200. We need 0..199 for array.
+            const rawIndex = frameIndex.get();
+            // Clamp between 1 and 200
+            const index = Math.min(Math.max(Math.floor(rawIndex), 1), FRAME_COUNT);
+            const img = images[index - 1]; // Array is 0-indexed
             if (img && img.complete) {
                 drawImageProp(ctx, img);
             }
@@ -109,58 +111,53 @@ export default function ScrollytellingHero() {
     }, [images, frameIndex, isLoaded]);
 
     return (
-        <div ref={containerRef} className="relative h-[500vh] bg-[#0a0a0a]">
+        <div ref={containerRef} className="relative h-[600vh] bg-[#0a0a0a]">
 
             {/* Sticky Viewport */}
             <div className="sticky top-0 h-screen overflow-hidden">
                 <canvas ref={canvasRef} className="absolute inset-0 w-full h-full object-cover" />
 
-                {/* Dark Overlay */}
-                <div className="absolute inset-0 bg-black/40" />
+                {/* Cinematic Overlay - Gradient for legibility */}
+                <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80" />
 
-                {/* Text Overlay - Phase 1: Ambiguity */}
+                {/* Text Overlay - Phase 1: The Start (Steep Climb) */}
                 <motion.div
-                    style={{ opacity: useTransform(scrollYProgress, [0, 0.15, 0.25], [0, 1, 0]) }}
-                    className="absolute inset-0 flex items-center justify-center text-center z-10 pointer-events-none p-6"
+                    style={{ opacity: useTransform(scrollYProgress, [0, 0.15, 0.30], [0, 1, 0]) }}
+                    className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none p-6"
                 >
-                    <h1 className="font-serif text-5xl md:text-7xl lg:text-9xl text-white font-bold mb-6 tracking-tight drop-shadow-2xl">
-                        {lang === 'he' ? 'מערפל...' : 'From Ambiguity...'}
+                    <h1 className="font-serif text-6xl md:text-8xl text-[#e2e8f0] font-bold mb-6 tracking-tight drop-shadow-2xl">
+                        {lang === 'he' ? 'הטיפוס הוא תלול.' : 'The Climb is Steep.'}
                     </h1>
                 </motion.div>
 
-                {/* Text Overlay - Phase 2: Vision */}
+                {/* Text Overlay - Phase 2: The Middle (Uncompromised Delivery) */}
                 <motion.div
-                    style={{ opacity: useTransform(scrollYProgress, [0.25, 0.35, 0.55], [0, 1, 0]) }}
-                    className="absolute inset-0 flex items-center justify-center text-center z-10 pointer-events-none p-6"
+                    style={{ opacity: useTransform(scrollYProgress, [0.35, 0.50, 0.65], [0, 1, 0]) }}
+                    className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none p-6"
                 >
-                    <h1 className="font-serif text-5xl md:text-7xl lg:text-9xl text-white font-bold mb-6 tracking-tight drop-shadow-2xl">
-                        {lang === 'he' ? '...לראייה בהירה.' : '...to Clear Vision.'}
+                    <h1 className="font-serif text-6xl md:text-8xl text-[#e2e8f0] font-bold mb-6 tracking-tight drop-shadow-2xl">
+                        {lang === 'he' ? 'ביצוע חסר פשרות.' : 'Uncompromised Delivery.'}
                     </h1>
                 </motion.div>
 
-                {/* Text Overlay - Phase 3: Precision */}
+                {/* Text Overlay - Phase 3: The Summit (Success Defined) */}
                 <motion.div
-                    style={{ opacity: useTransform(scrollYProgress, [0.55, 0.65, 0.85], [0, 1, 0]) }}
-                    className="absolute inset-0 flex items-center justify-center text-center z-10 pointer-events-none p-6"
+                    style={{ opacity: useTransform(scrollYProgress, [0.70, 0.85, 1], [0, 1, 1]) }}
+                    className="absolute inset-0 flex flex-col items-center justify-center text-center z-10 pointer-events-none p-6"
                 >
-                    <h1 className="font-serif text-5xl md:text-7xl lg:text-9xl text-white font-bold mb-6 tracking-tight drop-shadow-2xl">
-                        {lang === 'he' ? 'דיוק בכל פרט.' : 'Precision in every detail.'}
+                    <h1 className="font-serif text-6xl md:text-9xl text-[#c5a47e] font-bold mb-8 tracking-tight drop-shadow-2xl">
+                        {lang === 'he' ? 'הצלחה מוגדרת.' : 'Success Defined.'}
                     </h1>
-                </motion.div>
 
-                {/* Text Overlay - Phase 4: Resolution */}
-                <motion.div
-                    style={{ opacity: useTransform(scrollYProgress, [0.85, 0.95, 1], [0, 1, 1]) }}
-                    className="absolute inset-0 flex items-center justify-center text-center z-10 pointer-events-none p-6"
-                >
-                    <div>
-                        <h1 className="font-serif text-5xl md:text-7xl lg:text-9xl text-white font-bold mb-6 tracking-tight drop-shadow-2xl">
-                            {lang === 'he' ? 'בדרמן.' : 'Bederman.'}
-                        </h1>
-                        <p className="font-sans text-xl md:text-2xl text-slate-200 font-light tracking-wide">
-                            {lang === 'he' ? 'אנחנו מביאים איזון לאתגרים המשפטיים המורכבים ביותר שלך.' : 'We bring balance to your most complex legal challenges.'}
-                        </p>
-                    </div>
+                    {/* CTA Button Only at the End */}
+                    <motion.button
+                        className="pointer-events-auto px-10 py-4 bg-[#c5a47e] hover:bg-[#b08d66] text-black font-sans font-bold uppercase tracking-widest transition-all hover:scale-105"
+                        initial={{ opacity: 0, y: 20 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true }}
+                    >
+                        {lang === 'he' ? 'קבע פגישה' : 'Schedule Consultation'}
+                    </motion.button>
                 </motion.div>
 
                 {/* Scroll Indicator */}
@@ -169,7 +166,7 @@ export default function ScrollytellingHero() {
                     animate={{ opacity: [0.3, 1, 0.3] }}
                     transition={{ duration: 2, repeat: Infinity }}
                 >
-                    {lang === 'he' ? 'גלול כדי לגלות' : 'Scroll to Explore'}
+                    {lang === 'he' ? 'גלול כדי לטפס' : 'Scroll to Climb'}
                 </motion.div>
             </div>
         </div>

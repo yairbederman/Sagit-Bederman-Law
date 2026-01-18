@@ -1,6 +1,6 @@
 'use client';
 
-import ScrollytellingHero from "@/components/features/ScrollytellingHero";
+import VideoHero from "@/components/features/VideoHero";
 import ValueProps from "@/components/features/ValueProps";
 import Testimonials from "@/components/features/Testimonials";
 import CTASection from "@/components/features/CTASection";
@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <main className="bg-[#0a0a0a] min-h-screen text-white selection:bg-amber-500/30 font-sans">
       <Header />
-      <ScrollytellingHero />
+      <VideoHero />
       <ValueProps />
       <Testimonials />
       <CTASection />

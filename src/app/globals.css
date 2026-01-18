@@ -28,10 +28,25 @@
   --color-slate-600: var(--color-slate-600);
   --color-gold-muted: var(--color-gold-muted);
 
-  --font-display: var(--font-noto-serif-hebrew); 
-  --font-body: var(--font-assistant);
+  --font-display: var(--font-playfair); 
+  --font-body: var(--font-inter);
 
   --shadow-soft: 0 10px 30px -10px rgba(0, 0, 0, 0.04);
+}
+
+@keyframes gradient-xy {
+    0%, 100% {
+        background-size: 400% 400%;
+        background-position: left center;
+    }
+    50% {
+        background-size: 200% 200%;
+        background-position: right center;
+    }
+}
+
+.animate-gradient-xy {
+    animation: gradient-xy 3s ease infinite;
 }
 
 /* Base styles */

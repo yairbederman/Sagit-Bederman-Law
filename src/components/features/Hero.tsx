@@ -4,6 +4,7 @@ import { ArrowRight, ArrowLeft, Trophy, Award, ShieldCheck } from 'lucide-react'
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useLanguage } from '@/context/LanguageContext';
+import SeamlessLoopVideo from '../ui/SeamlessLoopVideo';
 
 export default function Hero() {
     const { lang } = useLanguage();
@@ -12,17 +13,14 @@ export default function Hero() {
     return (
         <section className="relative min-h-[90vh] flex items-center pt-20 overflow-hidden">
             <div className="absolute inset-0 bg-slate-900">
-                <Image
-                    src="/images/hero-bg.png"
-                    alt="Tel Aviv Office Skyline"
-                    fill
-                    className="object-cover object-center opacity-40"
-                    priority
-                    quality={100}
+                <SeamlessLoopVideo
+                    src="/Whisk_ydnjfdn2ujzxkdo40so5cjytizn3qtlmrzmw0sn.mp4"
+                    className="absolute inset-0 w-full h-full opacity-90"
+                    crossFadeDuration={1500}
                 />
             </div>
 
-            <div className="absolute inset-0 bg-gradient-to-r from-warm-beige via-warm-beige/80 to-transparent"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-warm-beige/80 via-warm-beige/40 to-transparent"></div>
 
             <div className="relative w-full max-w-[1440px] mx-auto px-6 lg:px-12 py-20 lg:py-32">
                 <div className="max-w-3xl flex flex-col gap-8">
